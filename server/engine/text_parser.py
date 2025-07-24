@@ -74,11 +74,11 @@ def clean_text(text: str, lowercase=True, keep_punctuation=False) -> str:
 
     return text.strip()
 
-# For standalone testing
-if __name__ == "__main__":
-    filename = "doc-1753338594537.pdf"
-    try:
-        content = extract_text_from_pdf(filename)
-        print(content)
-    except Exception as e:
-        print(f"Error: {e}")
+# # For standalone testing
+# if __name__ == "__main__":
+#     filename = "doc-1753338594537.pdf"
+#     try:
+#         content = extract_text_from_pdf(filename)
+#         print(content)
+#     except Exception as e:
+#         print(f"Error: {e}")

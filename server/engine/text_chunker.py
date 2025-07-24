@@ -67,18 +67,18 @@ def smart_token_chunk_text(
 
     return chunks
 
-# For testing
-if __name__ == "__main__":
-    from text_parser import extract_text_from_pdf
+# # For testing
+# if __name__ == "__main__":
+#     from text_parser import extract_text_from_pdf
 
-    filename = "doc-1753338594537.pdf"
-    text = extract_text_from_pdf(filename)
+#     filename = "doc-1753338594537.pdf"
+#     text = extract_text_from_pdf(filename)
 
-    chunks = smart_token_chunk_text(
-        text,
-        max_tokens=512,  # You can set 1024 or 2048 depending on your model
-        overlap=50
-    )
+#     chunks = smart_token_chunk_text(
+#         text,
+#         max_tokens=512,  # You can set 1024 or 2048 depending on your model
+#         overlap=50
+#     )
 
-    for i, chunk in enumerate(chunks):
-        print(f"\n--- Chunk {i + 1} --- ({get_token_count(chunk)} tokens)\n{chunk[:300]}...\n")
+#     for i, chunk in enumerate(chunks):
+#         print(f"\n--- Chunk {i + 1} --- ({get_token_count(chunk)} tokens)\n{chunk[:300]}...\n")
