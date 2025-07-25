@@ -3,8 +3,10 @@ import multer, { FileFilterCallback } from 'multer';
 import path from 'path';
 import fs from 'fs';
 import userAuth from '../middlewares/userAuth';
+import axios from 'axios';
 
 const router = Router();
+const LLM_URI = process.env.LLM_URI;
 
 const uploadsDir = path.join(__dirname, '..', '..', 'uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -30,13 +32,22 @@ const fileFilter = (_req: Request, file: Express.Multer.File, cb: FileFilterCall
 
 const upload = multer({ storage, fileFilter });
 
-router.post('/upload', userAuth, upload.single('pdfFile'), (req: Request, res: Response) => {
+router.post('/upload', userAuth, upload.single('pdfFile'), async (req: Request, res: Response) => {
   if (!req.file) {
     return res.status(400).json({ message: 'No file uploaded or invalid file type' });
   }
+  const filename = req.file.filename;
+  try{
+    const response = await axios.post(`${LLM_URI}/pre-process/`, {
+  filename: filename
+});
+  }
+  catch(error: any){
+    console.log('Error while calling fast API', error.message);
+  }
 
   res.status(200).json({
-    message: 'PDF uploaded successfully',
+    message: 'PDF uploaded successfully and preprocessed',
     filename: req.file.filename,
     path: req.file.path,
   });
