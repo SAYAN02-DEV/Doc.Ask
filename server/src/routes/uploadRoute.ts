@@ -53,4 +53,29 @@ router.post('/upload', userAuth, upload.single('pdfFile'), async (req: Request, 
   });
 });
 
+router.post('/chat', userAuth, async (req: Request<{}, {}, { query: string;}>, res: Response) => {
+  const { query } = req.body;
+  const filename = (req as any).filename + ".pdf";
+  if (!query || !filename) {
+    return res.status(400).json({ message: 'Missing query or filename in request body' });
+  }
+
+  try {
+    const response = await axios.post(`${LLM_URI}/semantic-search/`, {
+      filename,
+      query
+    });
+
+    res.status(200).json({
+      message: 'Semantic search successful',
+      data: response.data
+    });
+
+  } catch (error: any) {
+    console.error('Error while calling FastAPI during chat', error.message);
+    res.status(500).json({ message: 'Error during semantic search' });
+  }
+});
+
+
 export default router;

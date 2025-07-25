@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import { useAuth } from "./AuthContext";
+import axios from "axios";
 
 export default function AuthSidePanel({ open, mode, onClose }) {
   const { login } = useAuth();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     if (mode === "register" && !form.name) {
       setError("Name is required");
       return;
@@ -20,12 +23,46 @@ export default function AuthSidePanel({ open, mode, onClose }) {
       setError("Email and password are required");
       return;
     }
-    // Simulate login/register (no API)
-    const userData = mode === "register" ? { name: form.name, email: form.email } : { email: form.email };
-    login(userData, "dummy_token");
-    setForm({ name: "", email: "", password: "" });
-    setError("");
-    onClose();
+    if (mode === "register") {
+      setLoading(true);
+      try {
+        const res = await axios.post(`${import.meta.env.VITE_BACKEND_URI}/user/signup`, {
+          name: form.name,
+          email: form.email,
+          password: form.password
+        });
+        // Assume response contains user and token
+        login(res.data.user, res.data.token);
+        setForm({ name: "", email: "", password: "" });
+        setError("");
+        onClose();
+      } catch (err) {
+        setError(err.response?.data?.message || "Registration failed");
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+    if (mode === "login") {
+      setLoading(true);
+      try {
+        const res = await axios.post(`${import.meta.env.VITE_BACKEND_URI}/user/signin`, {
+          email: form.email,
+          password: form.password
+        });
+        // Assume response contains user and token
+        login(res.data.user, res.data.token);
+        setForm({ name: "", email: "", password: "" });
+        setError("");
+        onClose();
+      } catch (err) {
+        setError(err.response?.data?.message || "Login failed");
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+    // fallback (should not reach here)
   };
 
   return (
@@ -45,8 +82,9 @@ export default function AuthSidePanel({ open, mode, onClose }) {
             placeholder="Name"
             value={form.name}
             onChange={handleChange}
-            className="border p-2 rounded"
+            className="border border-black p-2 rounded text-black"
             autoComplete="off"
+            disabled={loading}
           />
         )}
         <input
@@ -55,8 +93,9 @@ export default function AuthSidePanel({ open, mode, onClose }) {
           placeholder="Email"
           value={form.email}
           onChange={handleChange}
-          className="border p-2 rounded"
+          className="border border-black p-2 rounded text-black"
           autoComplete="off"
+          disabled={loading}
         />
         <input
           type="password"
@@ -64,12 +103,13 @@ export default function AuthSidePanel({ open, mode, onClose }) {
           placeholder="Password"
           value={form.password}
           onChange={handleChange}
-          className="border p-2 rounded"
+          className="border border-black p-2 rounded text-black"
           autoComplete="off"
+          disabled={loading}
         />
         {error && <div className="text-red-500 text-sm">{error}</div>}
-        <button type="submit" className="bg-yellow-500 text-black py-2 rounded font-bold">
-          {mode === "login" ? "Login" : "Register"}
+        <button type="submit" className="bg-yellow-500 text-black py-2 rounded font-bold" disabled={loading}>
+          {loading ? "Please wait..." : mode === "login" ? "Login" : "Register"}
         </button>
       </form>
     </div>

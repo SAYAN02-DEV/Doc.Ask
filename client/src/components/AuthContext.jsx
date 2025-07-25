@@ -11,8 +11,14 @@ export function AuthProvider({ children }) {
     const storedToken = localStorage.getItem("auth_token");
     const storedUser = localStorage.getItem("auth_user");
     if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+      try {
+        setToken(storedToken);
+        setUser(JSON.parse(storedUser));
+      } catch (e) {
+        // If parsing fails, clear the bad value
+        localStorage.removeItem("auth_user");
+        setUser(null);
+      }
     }
   }, []);
 
