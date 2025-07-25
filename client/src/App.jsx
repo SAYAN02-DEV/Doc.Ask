@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 import TypewriterComponent from "./components/Typewritter";
+import NavigationBar from "./components/NavigationBar";
 function App() {
   const [init, setInit] = useState(false);
 
@@ -43,10 +44,10 @@ function App() {
                 }
               },
               color: {
-                value: "#ffffff"
+                value: "#f6e05e"
               },
               shape: {
-                type: "circle"
+                type: "square"
               },
               opacity: {
                 value: 0.5
@@ -95,9 +96,10 @@ function App() {
           }}
         />
       )}
+      <NavigationBar/>
       <TypewriterComponent/>
       <div className="flex justify-center">
-        <button className="bg-white text-black px-6 py-3 mt-10 mb-50 font-mono text-xl hover:scale-95 transition duration-200">
+        <button className="bg-yellow-400 text-black px-6 py-3 mt-10 mb-50 font-mono text-xl hover:scale-95 transition duration-200">
           Get Started
         </button>
       </div>
