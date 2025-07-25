@@ -7,6 +7,7 @@ const JWT_SECRET = "thisismyproject";
 interface AuthenticatedRequest extends Request {
   email?: string;
   name?: string;
+  filename?: string;
 }
 
 const userAuth = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
@@ -18,7 +19,6 @@ const userAuth = async (req: AuthenticatedRequest, res: Response, next: NextFunc
     }
 
     const token = authHeader.replace('Bearer ', '');
-
     const decoded = jwt.verify(token, JWT_SECRET) as { email: string };
 
     req.email = decoded.email;
@@ -30,7 +30,7 @@ const userAuth = async (req: AuthenticatedRequest, res: Response, next: NextFunc
     }
 
     req.name = user.name;
-
+    req.filename = user._id.toString();
     next();
   } catch (err) {
     return res.status(401).json({ message: "Unauthorized" });
