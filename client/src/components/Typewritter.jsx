@@ -6,7 +6,7 @@ export default function TypewriterComponent() {
       
       <Typewriter
         options={{
-          strings: ['Ask Questions Based on Context!'],
+          strings: ['Ask Questions Based on Context!', 'Upload any document. Ask anything.', 'No more scrolling — Just Ask.'],
           autoStart: true,
           loop: true,
           delay: 75,

@@ -2,8 +2,13 @@
 import { useEffect, useState, useCallback } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
-import TypewriterComponent from "./components/Typewritter";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import NavigationBar from "./components/NavigationBar";
+import HeroSection from "./components/HeroSection";
+import ChatPage from "./components/ChatPage";
+import { AuthProvider } from "./components/AuthContext";
+// import Footer from "./components/Footer"; // Optional if you created one
+
 function App() {
   const [init, setInit] = useState(false);
 
@@ -20,93 +25,109 @@ function App() {
   }, []);
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden">
-      {init && (
-        <Particles
-          id="tsparticles"
-          particlesLoaded={particlesLoaded}
-          options={{
-            fullScreen: {
-              enable: true,
-              zIndex: -1
-            },
-            background: {
-              color: {
-                value: "#000000"
-              }
-            },
-            particles: {
-              number: {
-                value: 120,
-                density: {
-                  enable: true,
-                  area: 800
-                }
-              },
-              color: {
-                value: "#f6e05e"
-              },
-              shape: {
-                type: "square"
-              },
-              opacity: {
-                value: 0.5
-              },
-              size: {
-                value: { min: 1, max: 3 }
-              },
-              links: {
+    <AuthProvider>
+      <div className="relative min-h-screen">
+        {/* Background particles */}
+        {init && (
+          <Particles
+            id="tsparticles"
+            particlesLoaded={particlesLoaded}
+            options={{
+              fullScreen: {
                 enable: true,
-                distance: 150,
-                color: "#ffffff",
-                opacity: 0.4,
-                width: 1
+                zIndex: -1
               },
-              move: {
-                enable: true,
-                speed: 3,
-                direction: "none",
-                outModes: {
-                  default: "bounce"
+              background: {
+                color: {
+                  value: "#000000"
                 }
-              }
-            },
-            interactivity: {
-              events: {
-                onHover: {
-                  enable: true,
-                  mode: "repulse"
-                },
-                onClick: {
-                  enable: true,
-                  mode: "push"
-                },
-                resize: true
               },
-              modes: {
-                repulse: {
-                  distance: 100
+              particles: {
+                number: {
+                  value: 120,
+                  density: {
+                    enable: true,
+                    area: 800
+                  }
                 },
-                push: {
-                  quantity: 4
+                color: {
+                  value: "#f6e05e"
+                },
+                shape: {
+                  type: "square"
+                },
+                opacity: {
+                  value: 0.5
+                },
+                size: {
+                  value: { min: 1, max: 3 }
+                },
+                links: {
+                  enable: true,
+                  distance: 150,
+                  color: "#ffffff",
+                  opacity: 0.4,
+                  width: 1
+                },
+                move: {
+                  enable: true,
+                  speed: 3,
+                  direction: "none",
+                  outModes: {
+                    default: "bounce"
+                  }
                 }
-              }
-            },
-            detectRetina: true
-          }}
-        />
-      )}
-      <NavigationBar/>
-      <TypewriterComponent/>
-      <div className="flex justify-center">
-        <button className="bg-yellow-400 text-black px-6 py-3 mt-10 mb-50 font-mono text-xl hover:scale-95 transition duration-200">
-          Get Started
-        </button>
-      </div>
+              },
+              interactivity: {
+                events: {
+                  onHover: {
+                    enable: true,
+                    mode: "repulse"
+                  },
+                  onClick: {
+                    enable: false,
+                    mode: "push"
+                  },
+                  resize: true
+                },
+                modes: {
+                  repulse: {
+                    distance: 100
+                  },
+                  push: {
+                    quantity: 4
+                  }
+                }
+              },
+              detectRetina: true
+            }}
+          />
+        )}
 
-      
+        {/* Routing */}
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<HeroSection />} />
+              <Route path='/chat' element={<ChatPage/>}/>
+              {/* Add more routes here as needed */}
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </AuthProvider>
+  );
+}
+
+// Layout used for all routes
+function Layout() {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <NavigationBar />
+      <main className="flex-1">
+        <Outlet />
+      </main>
     </div>
-    
   );
 }
 
