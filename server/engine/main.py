@@ -29,6 +29,13 @@ def pre_processing(filename: str):
     store.add_embeddings(embeddings.tolist(), chunks)
     store.save(index_path, meta_path)
 
+    # Delete the original PDF file after embeddings are generated
+    try:
+        os.remove(filename)
+        print(f"Deleted original PDF file: {filename}")
+    except Exception as e:
+        print(f"Failed to delete original PDF file: {filename}. Error: {e}")
+
 #this function is to be run per query
 def semantic_search_from_file(filename:str, query: str, top_k: int = 3) -> str:
     index_path = f"uploads/{filename}/vector.index"
