@@ -1,35 +1,111 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+// src/App.jsx
+import { useEffect, useState, useCallback } from "react";
+import Particles, { initParticlesEngine } from "@tsparticles/react";
+import { loadSlim } from "@tsparticles/slim";
+import TypewriterComponent from "./components/Typewritter";
 function App() {
-  const [count, setCount] = useState(0)
+  const [init, setInit] = useState(false);
+
+  useEffect(() => {
+    initParticlesEngine(async (engine) => {
+      await loadSlim(engine);
+    }).then(() => {
+      setInit(true);
+    });
+  }, []);
+
+  const particlesLoaded = useCallback((container) => {
+    console.log("Particles loaded:", container);
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div className="relative w-screen h-screen overflow-hidden">
+      {init && (
+        <Particles
+          id="tsparticles"
+          particlesLoaded={particlesLoaded}
+          options={{
+            fullScreen: {
+              enable: true,
+              zIndex: -1
+            },
+            background: {
+              color: {
+                value: "#000000"
+              }
+            },
+            particles: {
+              number: {
+                value: 120,
+                density: {
+                  enable: true,
+                  area: 800
+                }
+              },
+              color: {
+                value: "#ffffff"
+              },
+              shape: {
+                type: "circle"
+              },
+              opacity: {
+                value: 0.5
+              },
+              size: {
+                value: { min: 1, max: 3 }
+              },
+              links: {
+                enable: true,
+                distance: 150,
+                color: "#ffffff",
+                opacity: 0.4,
+                width: 1
+              },
+              move: {
+                enable: true,
+                speed: 3,
+                direction: "none",
+                outModes: {
+                  default: "bounce"
+                }
+              }
+            },
+            interactivity: {
+              events: {
+                onHover: {
+                  enable: true,
+                  mode: "repulse"
+                },
+                onClick: {
+                  enable: true,
+                  mode: "push"
+                },
+                resize: true
+              },
+              modes: {
+                repulse: {
+                  distance: 100
+                },
+                push: {
+                  quantity: 4
+                }
+              }
+            },
+            detectRetina: true
+          }}
+        />
+      )}
+      <TypewriterComponent/>
+      <div className="flex justify-center">
+        <button className="bg-white text-black px-6 py-3 mt-10 mb-50 font-mono text-xl hover:scale-95 transition duration-200">
+          Get Started
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+      
+    </div>
+    
+  );
 }
 
-export default App
+export default App;
