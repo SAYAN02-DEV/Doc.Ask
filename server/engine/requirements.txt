@@ -1,0 +1,11 @@
+# Core dependencies
+sentence-transformers
+faiss-cpu
+google-generativeai
+python-dotenv
+
+# Standard libraries (do not need to be installed via pip):
+# os
+# dotenv
+# typing
+# (etc.) 
