@@ -1,11 +1,10 @@
-# Core dependencies
-sentence-transformers
-faiss-cpu
-google-generativeai
-python-dotenv
-
-# Standard libraries (do not need to be installed via pip):
-# os
-# dotenv
-# typing
-# (etc.) 
+faiss_cpu==1.11.0.post1
+fastapi==0.116.1
+fitz==0.0.1.dev2
+numpy==2.3.2
+protobuf==6.31.1
+pydantic==2.11.7
+python-dotenv==1.1.1
+sentence_transformers==5.0.0
+tiktoken==0.9.0
+uvicorn==0.35.0
